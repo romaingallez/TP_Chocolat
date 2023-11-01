@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ProjetChocolat.FileServices\ProjetChocolat.FileServices.csproj" />
+      <ProjectReference Include="..\ProjetChocolat.ListManagement\ProjetChocolat.ListManagement.csproj" />
+      <ProjectReference Include="..\ProjetChocolat.Logging\ProjetChocolat.Logging.csproj" />
+      <ProjectReference Include="..\ProjetChocolat.Models\ProjetChocolat.Models.csproj" />
+    </ItemGroup>
+
+</Project>

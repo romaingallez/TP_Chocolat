@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetChocolat", "ProjetChocolat\ProjetChocolat.csproj", "{82892116-782F-422A-82A4-96973B98CB08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetChocolat.Core", "ProjetChocolat.Core\ProjetChocolat.Core.csproj", "{10448354-FC79-4D31-876E-59E64CD94F15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetChocolat.FileServices", "ProjetChocolat.FileServices\ProjetChocolat.FileServices.csproj", "{B9346ACE-F2F3-4FAA-A6F8-F000567C523F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetChocolat.Models", "ProjetChocolat.Models\ProjetChocolat.Models.csproj", "{32BF9219-C245-4448-A6FE-7BBCF0BFD5B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetChocolat.ListManagement", "ProjetChocolat.ListManagement\ProjetChocolat.ListManagement.csproj", "{13015273-8989-4E01-8E00-548385C62616}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjetChocolat.Logging", "ProjetChocolat.Logging\ProjetChocolat.Logging.csproj", "{8614D222-1450-4F1A-8621-CDA54F49F3AC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82892116-782F-422A-82A4-96973B98CB08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82892116-782F-422A-82A4-96973B98CB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82892116-782F-422A-82A4-96973B98CB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82892116-782F-422A-82A4-96973B98CB08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10448354-FC79-4D31-876E-59E64CD94F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10448354-FC79-4D31-876E-59E64CD94F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10448354-FC79-4D31-876E-59E64CD94F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10448354-FC79-4D31-876E-59E64CD94F15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9346ACE-F2F3-4FAA-A6F8-F000567C523F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9346ACE-F2F3-4FAA-A6F8-F000567C523F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9346ACE-F2F3-4FAA-A6F8-F000567C523F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9346ACE-F2F3-4FAA-A6F8-F000567C523F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32BF9219-C245-4448-A6FE-7BBCF0BFD5B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32BF9219-C245-4448-A6FE-7BBCF0BFD5B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32BF9219-C245-4448-A6FE-7BBCF0BFD5B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32BF9219-C245-4448-A6FE-7BBCF0BFD5B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13015273-8989-4E01-8E00-548385C62616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13015273-8989-4E01-8E00-548385C62616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13015273-8989-4E01-8E00-548385C62616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13015273-8989-4E01-8E00-548385C62616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8614D222-1450-4F1A-8621-CDA54F49F3AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8614D222-1450-4F1A-8621-CDA54F49F3AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8614D222-1450-4F1A-8621-CDA54F49F3AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8614D222-1450-4F1A-8621-CDA54F49F3AC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
