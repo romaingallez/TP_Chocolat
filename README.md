@@ -89,4 +89,3 @@ Les méthodes sont asynchrones.
 Chaque classe (hors model) doit avoir une Interface (ex: FileWriter => IFileWriter)
 Chaque méthode a un retour dans les services. Pas de void.
 ```
-

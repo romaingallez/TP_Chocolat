@@ -17,6 +17,7 @@ namespace ProjetChocolat
             if (choice == "1")
             {
                 userServices.HandleAdministrateur();
+                
             }
             else if (choice == "2")
             {
