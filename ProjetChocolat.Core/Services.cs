@@ -27,6 +27,7 @@ namespace ProjetChocolat.Core
                 // Demande et stocke le nom d'utilisateur de l'administrateur
                 Console.Write("Entrez votre username: ");
                 admin.Login = Console.ReadLine();
+                username = admin.Login;
 
                 // Demande et valide le mot de passe de l'administrateur
                 do
