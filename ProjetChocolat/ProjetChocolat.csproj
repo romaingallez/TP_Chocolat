@@ -5,6 +5,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>ProjetChocolat</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,6 +14,16 @@
       <ProjectReference Include="..\ProjetChocolat.ListManagement\ProjetChocolat.ListManagement.csproj" />
       <ProjectReference Include="..\ProjetChocolat.Logging\ProjetChocolat.Logging.csproj" />
       <ProjectReference Include="..\ProjetChocolat.Models\ProjetChocolat.Models.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="bin\Debug\net7.0\acheteurs.json" />
+      <Content Include="bin\Debug\net7.0\administrateurs.json" />
+      <Content Include="bin\Debug\net7.0\articles.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="bin\" />
     </ItemGroup>
 
 </Project>

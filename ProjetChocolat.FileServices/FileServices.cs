@@ -23,6 +23,7 @@ namespace ProjetChocolat.FileServices
         {
             var jsonString = JsonSerializer.Serialize(data);
             File.WriteAllText(path, jsonString);
+            
         }
     }
 

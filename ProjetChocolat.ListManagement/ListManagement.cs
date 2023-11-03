@@ -1,5 +1,5 @@
 ﻿namespace ProjetChocolat.ListManagement;
 
-public class Class1
+public class ListManagement
 {
 }
