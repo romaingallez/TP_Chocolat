@@ -10,103 +10,109 @@ namespace ProjetChocolat.Core
 {
     public class UserServices
     {
-        private Dictionary<string, (Action, string)> adminMenuActions;
 
-        public UserServices()
-        {
-            // Initialisez le dictionnaire dans le constructeur
-            adminMenuActions = new Dictionary<string, (Action, string)>
-            {
-                ["1"] = (ListArticles, "Afficher la liste des articles"),
-                ["2"] = (InputArticle, "Ajouter un article"),
-                ["3"] = (GenerateTotalSalesBill, "Générer la facture pour tous les articles vendus"),
-                ["4"] = (GenerateBillByBuyer, "Générer la facture par acheteur"),
-                ["5"] = (GenerateBillByDate, "Générer la facture par date d'achat"),
-                ["6"] = (Logout, "Se déconnecter")
-            };
-        }
-        
-
+            // Gère le processus de connexion ou de création d'un nouvel administrateur
         public void HandleAdministrateur()
         {
             var adminService = new AdministrateurFileService();
             var path = "administrateurs.json";
             string username = null;
 
-            if (!System.IO.File.Exists(path))
+            // Vérifie si le fichier des administrateurs existe déjà
+            if (!File.Exists(path))
             {
                 Console.WriteLine("Création d'un nouvel administrateur.");
                 var admin = new Administrateur();
 
+                // Demande et stocke le nom d'utilisateur de l'administrateur
                 Console.Write("Entrez votre username: ");
                 admin.Login = Console.ReadLine();
 
+                // Demande et valide le mot de passe de l'administrateur
                 do
                 {
                     Console.Write("Entrez votre mot de passe (6 caractères alphanumériques et 1 caractère spécial): ");
                     admin.Password = Console.ReadLine();
-                } while (!IsValidPassword(admin.Password));
+                }
+                while (!IsValidPassword(admin.Password));
 
+                // Enregistre le nouvel administrateur dans le fichier
                 adminService.WriteToFile(path, new List<Administrateur> { admin });
-
-                // Log the creation of a new admin
                 ProjetChocolat.Logging.Logger.LogAction(admin.Login, "Création", "nouvel administrateur");
-                // On quite a cause d'un bug out ou l'admin n'est pas sauvegardé temps qu'on ne quitte pas le programme (a voir si j'ai le temps de debug)
-                return;
             }
             else
             {
+                // Processus de connexion pour un administrateur existant
                 Console.Write("Entrez votre username: ");
                 username = Console.ReadLine();
-
                 Console.Write("Entrez votre mot de passe: ");
                 var password = Console.ReadLine();
 
                 var admins = adminService.ReadFromFile(path);
                 var admin = admins.Find(a => a.Login == username && a.Password == password);
 
+                // Vérifie les identifiants
                 if (admin == null)
                 {
                     Console.WriteLine("Identifiants incorrects.");
-                    // Log failed login attempt
                     ProjetChocolat.Logging.Logger.LogAction(username, "Échec de connexion", "administrateur");
                     return;
                 }
                 else
                 {
                     Console.WriteLine("Connexion réussie!");
-                    // Log successful login
                     ProjetChocolat.Logging.Logger.LogAction(username, "Connexion", "administrateur");
                 }
             }
 
-            // Afficher le menu
+            // Menu après connexion
             while (true)
             {
                 Console.WriteLine("Que voulez-vous faire?");
-                foreach (var menuItem in adminMenuActions)
-                {
-                    Console.WriteLine($"{menuItem.Key}. {menuItem.Value.Item2}");
-                }
+                // Affiche les options disponibles pour l'administrateur
+                Console.WriteLine("1. Afficher la liste des articles");
+                Console.WriteLine("2. Ajouter un article");
+                Console.WriteLine("3. Générer la facture pour tous les articles vendus");
+                Console.WriteLine("4. Générer la facture par acheteur");
+                Console.WriteLine("5. Générer la facture par date d'achat");
+                Console.WriteLine("6. Se déconnecter");
 
                 var adminChoice = Console.ReadLine();
-                if (adminMenuActions.TryGetValue(adminChoice, out var action))
+
+                switch (adminChoice)
                 {
-                    action.Item1(); // Exécute l'action associée au choix
-                    // Write the username to console
-                    Console.WriteLine(username);
-                    ProjetChocolat.Logging.Logger.LogAction(username, "Exécuté", action.Item2);
-                }
-                else
-                {
-                    Console.WriteLine("Choix invalide.");
+                    case "1":
+                        ListArticles();
+                        ProjetChocolat.Logging.Logger.LogAction(username, "Liste", "articles");
+                        break;
+                    case "2":
+                        InputArticle();
+                        break;
+                    case "3":
+                        GenerateTotalSalesBill();
+                        ProjetChocolat.Logging.Logger.LogAction(username, "Généré", "facture totale des ventes");
+                        break;
+                    case "4":
+                        GenerateBillByBuyer();
+                        ProjetChocolat.Logging.Logger.LogAction(username, "Généré", "facture par acheteur");
+                        break;
+                    case "5":
+                        GenerateBillByDate();
+                        ProjetChocolat.Logging.Logger.LogAction(username, "Généré", "facture par date d'achat");
+                        break;
+                    case "6":
+                        Console.WriteLine("Déconnexion réussie!");
+                        ProjetChocolat.Logging.Logger.LogAction(username, "Déconnexion", "administrateur");
+                        return;
+                    default:
+                        Console.WriteLine("Choix invalide.");
+                        break;
                 }
 
                 Console.WriteLine("Appuyez sur une touche pour continuer...");
                 Console.ReadKey();
             }
         }
-
         private void ListArticles()
         {
             var articleService = new ArticleFileService();
@@ -125,9 +131,9 @@ namespace ProjetChocolat.Core
                 Console.WriteLine($"Id: {article.Id}, Reference: {article.Reference}, Prix: {article.Prix}");
             }
 
-            // // Wait for any key to be pressed before continuing
-            // Console.WriteLine("Appuyez sur une touche pour continuer...");
-            // Console.ReadKey();
+            // Wait for any key to be pressed before continuing
+            Console.WriteLine("Appuyez sur une touche pour continuer...");
+            Console.ReadKey();
         }
 
         private void InputArticle()
@@ -269,11 +275,10 @@ namespace ProjetChocolat.Core
             var regex = new Regex(@"^(?=.*[a-zA-Z0-9].{6,})(?=.*[^a-zA-Z0-9])");
             return regex.IsMatch(password);
         }
-        
+
         private void Logout()
         {
             Console.WriteLine("Déconnexion réussie!");
-            Environment.Exit(0);
         }
 
 
@@ -350,8 +355,8 @@ namespace ProjetChocolat.Core
                 Console.WriteLine(
                     $"N°: {i + 1}, Id: {article.Id}, Reference: {article.Reference}, Prix: {article.Prix}");
             }
-            
-            
+
+
             var articleAcheteService = new ArticleAcheteFileService();
             var pathArticleAchetesJson = "articlesAchetes.json";
 
@@ -360,7 +365,7 @@ namespace ProjetChocolat.Core
             {
                 purchasedArticles = articleAcheteService.ReadFromFile(pathArticleAchetesJson);
             }
-            
+
 
             string userInput;
             do
@@ -398,9 +403,10 @@ namespace ProjetChocolat.Core
 
                         // Log the addition of an article
                         ProjetChocolat.Logging.Logger.LogAction(buyer.Nom, "Ajout d'un", $"{articleToAdd.Reference}");
-                        
+
                         // Add to the purchased articles list
-                        var existingArticleAchete = purchasedArticles.FirstOrDefault(a => a.IdAcheteur == buyer.Id && a.IdChocolat == articleToAdd.Id);
+                        var existingArticleAchete = purchasedArticles.FirstOrDefault(a =>
+                            a.IdAcheteur == buyer.Id && a.IdChocolat == articleToAdd.Id);
                         if (existingArticleAchete != null)
                         {
                             existingArticleAchete.Quantite++;
@@ -415,7 +421,7 @@ namespace ProjetChocolat.Core
                                 DateAchat = DateTime.Now
                             });
                         }
-                        
+
                         // Save the updated list of purchased articles
                         articleAcheteService.WriteToFile(pathArticleAchetesJson, purchasedArticles);
                     }
