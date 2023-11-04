@@ -24,6 +24,7 @@
 
     <ItemGroup>
       <Folder Include="bin\" />
+      <Folder Include="bin\Debug\net7.0\" />
     </ItemGroup>
 
 </Project>

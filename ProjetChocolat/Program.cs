@@ -1,5 +1,7 @@
 ﻿using System;
 using ProjetChocolat.Core;
+using System.Threading;
+
 
 namespace ProjetChocolat
 {
@@ -7,10 +9,22 @@ namespace ProjetChocolat
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Chocolate is good!");
 
             var userServices = new UserServices();
 
+            userServices.InitializeFiles();
+            // Countdown for five second the clear screen.
+            
+            for (int i = 5; i > 0; i--)
+            {
+                Console.Write($"\rDémarrage dans {i} secondes.   "); // Overwrite with extra spaces
+                Thread.Sleep(1000);
+            }
+            Console.Write("\rLancement!               "); // Clean up the line after the countdown is complete
+
+            
+            Console.Clear();
+            
             Console.WriteLine("Qui êtes-vous? (1: Administrateur, 2: Utilisateur)");
             var choice = Console.ReadLine();
 
@@ -26,6 +40,7 @@ namespace ProjetChocolat
             else
             {
                 Console.WriteLine("Choix invalide.");
+                Console.Clear();
             }
         }
     }

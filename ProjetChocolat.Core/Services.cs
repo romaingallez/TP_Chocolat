@@ -10,59 +10,117 @@ namespace ProjetChocolat.Core
 {
     public class UserServices
     {
+        // Ajoutez cette nouvelle méthode dans la classe UserServices
+        public void InitializeFiles()
+        {
+            //Create config folder if it doesn't exist
+            if (!System.IO.Directory.Exists("config"))
+            {
+                System.IO.Directory.CreateDirectory("config");
+            }
+            // Liste de tous les chemins de fichier nécessaires à votre application
+            var filePaths = new List<string>
+            {
+                "config/administrateurs.json",
+                "config/articles.json",
+                "config/articlesAchetes.json",
+                "config/acheteurs.json"
+            };
+
+            // Passez en revue chaque chemin de fichier et créez le fichier s'il n'existe pas
+            foreach (var path in filePaths)
+            {
+                try
+                {
+                    if (!System.IO.File.Exists(path))
+                    {
+                        System.IO.File.WriteAllText(path, "[]");
+                        Console.WriteLine($"Fichier {path} créé.");
+                        ProjetChocolat.Logging.Logger.LogAction("System", "Création", $"fichier {path}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Impossible de créer le fichier {path}: {ex.Message}");
+                    ProjetChocolat.Logging.Logger.LogAction("System", "Erreur", $"Impossible de créer le fichier {path}: {ex.Message}");
+                }
+            }
+        }
 
             // Gère le processus de connexion ou de création d'un nouvel administrateur
         public void HandleAdministrateur()
         {
             var adminService = new AdministrateurFileService();
-            var path = "administrateurs.json";
+            var path = "config/administrateurs.json";
             string username = null;
 
             // Vérifie si le fichier des administrateurs existe déjà
             if (!File.Exists(path))
             {
-                Console.WriteLine("Création d'un nouvel administrateur.");
-                var admin = new Administrateur();
-
-                // Demande et stocke le nom d'utilisateur de l'administrateur
-                Console.Write("Entrez votre username: ");
-                admin.Login = Console.ReadLine();
-                username = admin.Login;
-
-                // Demande et valide le mot de passe de l'administrateur
-                do
-                {
-                    Console.Write("Entrez votre mot de passe (6 caractères alphanumériques et 1 caractère spécial): ");
-                    admin.Password = Console.ReadLine();
-                }
-                while (!IsValidPassword(admin.Password));
-
-                // Enregistre le nouvel administrateur dans le fichier
-                adminService.WriteToFile(path, new List<Administrateur> { admin });
-                ProjetChocolat.Logging.Logger.LogAction(admin.Login, "Création", "nouvel administrateur");
+                Console.WriteLine("Le fichier des administrateurs n'existe pas.");
             }
             else
             {
-                // Processus de connexion pour un administrateur existant
-                Console.Write("Entrez votre username: ");
-                username = Console.ReadLine();
-                Console.Write("Entrez votre mot de passe: ");
-                var password = Console.ReadLine();
-
+                
+                // Read the config/administrateurs.json file and check if there are any existing admins
                 var admins = adminService.ReadFromFile(path);
-                var admin = admins.Find(a => a.Login == username && a.Password == password);
-
-                // Vérifie les identifiants
-                if (admin == null)
+                
+                // If there are no existing admins, create a new one
+                if (admins.Count == 0)
                 {
-                    Console.WriteLine("Identifiants incorrects.");
-                    ProjetChocolat.Logging.Logger.LogAction(username, "Échec de connexion", "administrateur");
-                    return;
+                    Console.WriteLine("Création d'un nouvel administrateur.");
+                    var admin = new Administrateur();
+
+                    // Demande et stocke le nom d'utilisateur de l'administrateur
+                    Console.Write("Entrez votre username: ");
+                    admin.Login = Console.ReadLine();
+                    username = admin.Login;
+
+                    // Demande et valide le mot de passe de l'administrateur
+                    do
+                    {
+                        Console.Write("Entrez votre mot de passe (6 caractères alphanumériques et 1 caractère spécial): ");
+                        admin.Password = Console.ReadLine();
+                    }
+                    while (!IsValidPassword(admin.Password));
+
+                    // Enregistre le nouvel administrateur dans le fichier
+                    adminService.WriteToFile(path, new List<Administrateur> { admin });
+                    ProjetChocolat.Logging.Logger.LogAction(admin.Login, "Création", "nouvel administrateur");
                 }
                 else
                 {
-                    Console.WriteLine("Connexion réussie!");
-                    ProjetChocolat.Logging.Logger.LogAction(username, "Connexion", "administrateur");
+                    // If there are existing admins, ask for the username and password
+                    Console.Clear();
+                    var adminMessage = "Le compte administrateur existe déjà \nConnexion administrateur";
+                    Console.WriteLine(new string('-', adminMessage.Length));
+                    Console.WriteLine(adminMessage);
+                    var usernameAsk = "Entrez votre username: "; 
+                    Console.WriteLine(new string('-', usernameAsk.Length));
+                    Console.WriteLine(usernameAsk);
+                    username = Console.ReadLine();
+                    var passwordAsk = "Entrez votre mot de passe: ";
+                    Console.WriteLine(passwordAsk);
+                    Console.WriteLine(new string('-', usernameAsk.Length));
+                    
+                    
+                    var password = Console.ReadLine();
+
+                    // Find the admin with the matching username and password
+                    var admin = admins.Find(a => a.Login == username && a.Password == password);
+
+                    // If no admin is found, the credentials are invalid
+                    if (admin == null)
+                    {
+                        Console.WriteLine("Identifiants incorrects.");
+                        ProjetChocolat.Logging.Logger.LogAction(username, "Échec de connexion", "administrateur");
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Connexion réussie!");
+                        ProjetChocolat.Logging.Logger.LogAction(username, "Connexion", "administrateur");
+                    }
                 }
             }
 
@@ -117,7 +175,7 @@ namespace ProjetChocolat.Core
         private void ListArticles()
         {
             var articleService = new ArticleFileService();
-            var path = "articles.json";
+            var path = "config/articles.json";
 
             if (!System.IO.File.Exists(path))
             {
@@ -140,7 +198,7 @@ namespace ProjetChocolat.Core
         private void InputArticle()
         {
             var articleService = new ArticleFileService();
-            var path = "articles.json";
+            var path = "config/articles.json";
 
             var articles = System.IO.File.Exists(path) ? articleService.ReadFromFile(path) : new List<Article>();
 
@@ -165,7 +223,7 @@ namespace ProjetChocolat.Core
         {
             // This will involve getting all sold articles and summing up.
             var soldArticleService = new ArticleAcheteFileService();
-            var path = "articlesAchetes.json";
+            var path = "config/articlesAchetes.json";
 
             if (!System.IO.File.Exists(path))
             {
@@ -178,7 +236,7 @@ namespace ProjetChocolat.Core
             float totalAmount = 0;
             foreach (var soldArticle in soldArticles)
             {
-                // Assuming the price of the article remains same. Otherwise, we'd need to fetch the actual price from articles.json
+                // Assuming the price of the article remains same. Otherwise, we'd need to fetch the actual price from config/articles.json
                 totalAmount += soldArticle.Quantite * (GetArticlePriceById(soldArticle.IdChocolat));
             }
 
@@ -189,7 +247,7 @@ namespace ProjetChocolat.Core
         private void GenerateBillByBuyer()
         {
             var soldArticleService = new ArticleAcheteFileService();
-            var path = "articlesAchetes.json";
+            var path = "config/articlesAchetes.json";
 
             if (!System.IO.File.Exists(path))
             {
@@ -226,7 +284,7 @@ namespace ProjetChocolat.Core
         private void GenerateBillByDate()
         {
             var soldArticleService = new ArticleAcheteFileService();
-            var path = "articlesAchetes.json";
+            var path = "config/articlesAchetes.json";
 
             if (!System.IO.File.Exists(path))
             {
@@ -264,7 +322,7 @@ namespace ProjetChocolat.Core
         private float GetArticlePriceById(Guid id)
         {
             var articleService = new ArticleFileService();
-            var path = "articles.json";
+            var path = "config/articles.json";
             var articles = articleService.ReadFromFile(path);
             var article = articles.Find(a => a.Id == id);
 
@@ -286,7 +344,7 @@ namespace ProjetChocolat.Core
         public void HandleUtilisateur()
         {
             var buyerService = new AcheteurFileService();
-            var pathAcheteursJson = "acheteurs.json";
+            var pathAcheteursJson = "config/acheteurs.json";
 
             Console.Write("Entrez votre nom: ");
             // Read the username (nom) from console input put in all uppercase
@@ -303,14 +361,25 @@ namespace ProjetChocolat.Core
 
             if (buyer != null)
             {
-                Console.WriteLine($"Bienvenue, {buyer.Prenom} {buyer.Nom}!");
+
+                var welcomeMessage = $"Bienvenue, {buyer.Prenom} {buyer.Nom}!";
+                
+                Console.WriteLine(new string('-', welcomeMessage.Length));
+                Console.WriteLine(welcomeMessage);
+                Console.WriteLine(new string('-', welcomeMessage.Length));
+                
+                Console.WriteLine();
 
                 // Log the addition of an article
                 ProjetChocolat.Logging.Logger.LogAction(buyer.Nom, "Connexion", "acheteur existant");
             }
             else
             {
-                Console.WriteLine("Création d'un nouvel acheteur.");
+                // Console.WriteLine("Création d'un nouvel acheteur.");
+                var newBuyerMessage = "Création d'un nouvel acheteur.";
+                Console.WriteLine(new string('-', newBuyerMessage.Length));
+                Console.WriteLine(newBuyerMessage);
+                Console.WriteLine(new string('-', newBuyerMessage.Length));
                 buyer = new Acheteur(); // buyer is declared outside of the else block
 
                 buyer.Nom = enteredUsername;
@@ -341,7 +410,7 @@ namespace ProjetChocolat.Core
 
 
             var articleService = new ArticleFileService();
-            var pathArticlesJson = "articles.json";
+            var pathArticlesJson = "config/articles.json";
             List<Article> availableArticles = System.IO.File.Exists(pathArticlesJson)
                 ? articleService.ReadFromFile(pathArticlesJson)
                 : new List<Article>();
@@ -359,7 +428,7 @@ namespace ProjetChocolat.Core
 
 
             var articleAcheteService = new ArticleAcheteFileService();
-            var pathArticleAchetesJson = "articlesAchetes.json";
+            var pathArticleAchetesJson = "config/articlesAchetes.json";
 
             List<ArticleAchete> purchasedArticles = new List<ArticleAchete>();
             if (File.Exists(pathArticleAchetesJson))
