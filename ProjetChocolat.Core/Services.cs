@@ -45,6 +45,16 @@ namespace ProjetChocolat.Core
                     ProjetChocolat.Logging.Logger.LogAction("System", "Erreur", $"Impossible de créer le fichier {path}: {ex.Message}");
                 }
             }
+            
+            for (int i = 5; i > 0; i--)
+            {
+                Console.Write($"\rDémarrage dans {i} secondes.   "); // Overwrite with extra spaces
+                Thread.Sleep(1000);
+            }
+            Console.Write("\rLancement!               "); // Clean up the line after the countdown is complete
+
+            
+            Console.Clear();
         }
 
             // Gère le processus de connexion ou de création d'un nouvel administrateur
@@ -152,7 +162,7 @@ namespace ProjetChocolat.Core
                         ProjetChocolat.Logging.Logger.LogAction(username, "Liste", "articles");
                         break;
                     case "2":
-                        InputArticle();
+                        InputArticle(username);
                         break;
                     case "3":
                         GenerateTotalSalesBill();
@@ -199,7 +209,7 @@ namespace ProjetChocolat.Core
             
         }
 
-        private void InputArticle()
+        private void InputArticle(string username)
         {
             Console.Clear();
             var articleService = new ArticleFileService();
@@ -222,7 +232,9 @@ namespace ProjetChocolat.Core
 
             articles.Add(newArticle);
             articleService.WriteToFile(path, articles);
-
+            
+            // Log the addition of an article by the admin
+            ProjetChocolat.Logging.Logger.LogAction(user:username, "Ajout de", $"{newArticle.Reference}");
             Console.WriteLine("Article ajouté avec succès!");
             Console.Clear();
         }
@@ -345,9 +357,10 @@ namespace ProjetChocolat.Core
 
         public bool IsValidPassword(string password)
         {
-            var regex = new Regex(@"^(?=.*[a-zA-Z0-9].{6,})(?=.*[^a-zA-Z0-9])");
+            var regex = new Regex(@"^(?=.*[a-zA-Z0-9])(?=.*[^a-zA-Z0-9])(?=.*[A-Z]).{6,}$");
             return regex.IsMatch(password);
         }
+
 
         private void Logout()
         {
@@ -396,6 +409,8 @@ namespace ProjetChocolat.Core
                 Console.WriteLine(newBuyerMessage);
                 Console.WriteLine(new string('-', newBuyerMessage.Length));
                 buyer = new Acheteur(); // buyer is declared outside of the else block
+                buyer.Id = Guid.NewGuid();
+                
 
                 buyer.Nom = enteredUsername;
 

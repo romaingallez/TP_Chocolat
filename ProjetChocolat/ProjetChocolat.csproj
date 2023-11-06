@@ -20,11 +20,11 @@
       <Content Include="bin\Debug\net7.0\acheteurs.json" />
       <Content Include="bin\Debug\net7.0\administrateurs.json" />
       <Content Include="bin\Debug\net7.0\articles.json" />
+      <Content Include="bin\Debug\net7.0\log.txt" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="bin\" />
-      <Folder Include="bin\Debug\net7.0\" />
     </ItemGroup>
 
 </Project>
