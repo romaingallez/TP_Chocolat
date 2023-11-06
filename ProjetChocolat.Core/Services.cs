@@ -73,6 +73,7 @@ namespace ProjetChocolat.Core
 
                     // Demande et stocke le nom d'utilisateur de l'administrateur
                     Console.Write("Entrez votre username: ");
+                    Console.Write("> ");
                     admin.Login = Console.ReadLine();
                     username = admin.Login;
 
@@ -80,6 +81,7 @@ namespace ProjetChocolat.Core
                     do
                     {
                         Console.Write("Entrez votre mot de passe (6 caractères alphanumériques et 1 caractère spécial): ");
+                        Console.Write("> ");
                         admin.Password = Console.ReadLine();
                     }
                     while (!IsValidPassword(admin.Password));
@@ -98,12 +100,13 @@ namespace ProjetChocolat.Core
                     var usernameAsk = "Entrez votre username: "; 
                     Console.WriteLine(new string('-', usernameAsk.Length));
                     Console.WriteLine(usernameAsk);
+                    Console.Write("> ");
                     username = Console.ReadLine();
                     var passwordAsk = "Entrez votre mot de passe: ";
                     Console.WriteLine(passwordAsk);
                     Console.WriteLine(new string('-', usernameAsk.Length));
                     
-                    
+                    Console.Write("> ");
                     var password = Console.ReadLine();
 
                     // Find the admin with the matching username and password
@@ -124,6 +127,7 @@ namespace ProjetChocolat.Core
                 }
             }
 
+            Console.Clear();
             // Menu après connexion
             while (true)
             {
@@ -135,8 +139,11 @@ namespace ProjetChocolat.Core
                 Console.WriteLine("4. Générer la facture par acheteur");
                 Console.WriteLine("5. Générer la facture par date d'achat");
                 Console.WriteLine("6. Se déconnecter");
-
+                
+                
+                Console.Write("> ");
                 var adminChoice = Console.ReadLine();
+                
 
                 switch (adminChoice)
                 {
@@ -189,14 +196,12 @@ namespace ProjetChocolat.Core
             {
                 Console.WriteLine($"Id: {article.Id}, Reference: {article.Reference}, Prix: {article.Prix}");
             }
-
-            // Wait for any key to be pressed before continuing
-            Console.WriteLine("Appuyez sur une touche pour continuer...");
-            Console.ReadKey();
+            
         }
 
         private void InputArticle()
         {
+            Console.Clear();
             var articleService = new ArticleFileService();
             var path = "config/articles.json";
 
@@ -208,19 +213,23 @@ namespace ProjetChocolat.Core
             };
 
             Console.Write("Entrez la référence de l'article: ");
+            Console.Write("> ");
             newArticle.Reference = Console.ReadLine();
 
             Console.Write("Entrez le prix de l'article: ");
+            Console.Write("> ");
             newArticle.Prix = float.Parse(Console.ReadLine()); // TODO: Handle invalid inputs
 
             articles.Add(newArticle);
             articleService.WriteToFile(path, articles);
 
             Console.WriteLine("Article ajouté avec succès!");
+            Console.Clear();
         }
 
         private void GenerateTotalSalesBill()
         {
+            Console.Clear();
             // This will involve getting all sold articles and summing up.
             var soldArticleService = new ArticleAcheteFileService();
             var path = "config/articlesAchetes.json";
@@ -242,10 +251,12 @@ namespace ProjetChocolat.Core
 
             File.WriteAllText("TotalSalesBill.txt", $"Total des articles vendus: {totalAmount}€");
             Console.WriteLine("Facture créée: TotalSalesBill.txt");
+            Console.Clear();
         }
 
         private void GenerateBillByBuyer()
         {
+            Console.Clear();
             var soldArticleService = new ArticleAcheteFileService();
             var path = "config/articlesAchetes.json";
 
@@ -279,10 +290,12 @@ namespace ProjetChocolat.Core
             }
 
             Console.WriteLine("Factures créées pour chaque acheteur.");
+            Console.Clear();
         }
 
         private void GenerateBillByDate()
         {
+            Console.Clear();
             var soldArticleService = new ArticleAcheteFileService();
             var path = "config/articlesAchetes.json";
 
@@ -316,6 +329,7 @@ namespace ProjetChocolat.Core
             }
 
             Console.WriteLine("Factures créées pour chaque date.");
+            Console.Clear();
         }
 
 
@@ -347,6 +361,7 @@ namespace ProjetChocolat.Core
             var pathAcheteursJson = "config/acheteurs.json";
 
             Console.Write("Entrez votre nom: ");
+            Console.Write("> ");
             // Read the username (nom) from console input put in all uppercase
             var enteredUsername = Console.ReadLine().ToUpper();
 
@@ -385,16 +400,21 @@ namespace ProjetChocolat.Core
                 buyer.Nom = enteredUsername;
 
                 Console.Write("Entrez votre prénom: ");
+                Console.Write("> ");
                 buyer.Prenom = Console.ReadLine();
+                
 
                 Console.Write("Entrez votre adresse: ");
+                Console.Write("> ");
                 buyer.Adresse = Console.ReadLine();
+                
 
                 string phoneNumberInput;
                 int phoneNumber;
                 do
                 {
                     Console.Write("Entrez votre téléphone: ");
+                    Console.Write("> ");
                     phoneNumberInput = Console.ReadLine();
                 } while (!int.TryParse(phoneNumberInput, out phoneNumber) || phoneNumber < 0);
 
@@ -423,7 +443,7 @@ namespace ProjetChocolat.Core
             {
                 var article = availableArticles[i];
                 Console.WriteLine(
-                    $"N°: {i + 1}, Id: {article.Id}, Reference: {article.Reference}, Prix: {article.Prix}");
+                    $"{i + 1}: Reference: {article.Reference}, Prix: {article.Prix}");
             }
 
 
@@ -472,7 +492,7 @@ namespace ProjetChocolat.Core
                         Console.WriteLine($"Article ajouté : {articleToAdd.Reference} à {articleToAdd.Prix}€");
 
                         // Log the addition of an article
-                        ProjetChocolat.Logging.Logger.LogAction(buyer.Nom, "Ajout d'un", $"{articleToAdd.Reference}");
+                        ProjetChocolat.Logging.Logger.LogAction(buyer.Nom, "Achat de", $"{articleToAdd.Reference}");
 
                         // Add to the purchased articles list
                         var existingArticleAchete = purchasedArticles.FirstOrDefault(a =>

@@ -26,6 +26,7 @@ namespace ProjetChocolat
             Console.Clear();
             
             Console.WriteLine("Qui êtes-vous? (1: Administrateur, 2: Utilisateur)");
+            Console.Write("> ");
             var choice = Console.ReadLine();
 
             if (choice == "1")
